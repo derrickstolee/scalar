@@ -34,7 +34,6 @@ namespace Scalar.FunctionalTests.Tests.MultiEnlistmentTests
             bool skipFetchCommitsAndTrees = false)
         {
             ScalarFunctionalTestEnlistment output = ScalarFunctionalTestEnlistment.Clone(
-                ScalarTestConfig.PathToScalar,
                 branch,
                 localCacheRoot,
                 skipFetchCommitsAndTrees);

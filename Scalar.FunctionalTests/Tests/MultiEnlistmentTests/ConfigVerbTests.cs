@@ -163,7 +163,7 @@ namespace Scalar.FunctionalTests.Tests.MultiEnlistmentTests
 
         private string RunConfigCommand(string argument, int expectedExitCode = 0)
         {
-            ProcessResult result = ProcessHelper.Run(ScalarTestConfig.PathToScalar, $"config {argument}");
+            ProcessResult result = ProcessHelper.Run(Properties.Settings.Default.GetPathToScalar(), $"config {argument}");
             result.ExitCode.ShouldEqual(expectedExitCode, result.Errors);
 
             return result.Output;

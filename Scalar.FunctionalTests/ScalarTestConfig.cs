@@ -1,5 +1,3 @@
-using System.IO;
-
 namespace Scalar.FunctionalTests
 {
     public static class ScalarTestConfig
@@ -14,18 +12,9 @@ namespace Scalar.FunctionalTests
 
         public static object[] GitRepoTestsValidateWorkTree { get; set; }
 
-        public static bool TestScalarOnPath { get; set; }
+        public static string PathToScalar { get; set; }
 
-        public static string PathToScalar
-        {
-            get
-            {
-                return
-                    TestScalarOnPath ?
-                    Properties.Settings.Default.PathToScalar :
-                    Path.Combine(Properties.Settings.Default.CurrentDirectory, Properties.Settings.Default.PathToScalar);
-            }
-        }
+        public static string PathToScalarService { get; set; }
 
         public static string DotScalarRoot { get; set; }
     }

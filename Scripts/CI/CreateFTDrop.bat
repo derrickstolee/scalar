@@ -8,23 +8,14 @@ SETLOCAL enableextensions
 SET Configuration=%1
 SET SCALAR_STAGEDIR=%2
 
-REM Prepare the staging directories for functional tests.
+REM Prepare the staging directories for functional tests
 IF EXIST %SCALAR_STAGEDIR% (
   rmdir /s /q %SCALAR_STAGEDIR%
+  mkdir %SCALAR_STAGEDIR%
 )
 
-SET scriptsSrc=%SCALAR_SCRIPTSDIR%\*
-SET testsSrc=%SCALAR_OUTPUTDIR%\Scalar.FunctionalTests\bin\%Configuration%\netcoreapp3.0\win-x64\publish
-
-SET scriptsDest=%SCALAR_STAGEDIR%\src\Scripts
-SET testsDest=%SCALAR_STAGEDIR%\out\Scalar.FunctionalTests\bin\%Configuration%\netcoreapp3.0\win-x64\publish
-
-mkdir %scriptsDest%
-mkdir %testsDest%
-
-REM Make a minimal 'test' enlistment to pass along our pipeline.
-xcopy %scriptsSrc% %scriptsDest% /S /Y || EXIT /B 1
-xcopy %testsSrc% %testsDest% /S /Y || EXIT /B 1
+REM Publish tests to the build drop
+dotnet publish %SCALAR_SRCDIR%\Scalar.FunctionalTests --configuration %Configuration% --runtime win-x64 --output %SCALAR_STAGEDIR% || EXIT /B 1
 GOTO END
 
 :USAGE

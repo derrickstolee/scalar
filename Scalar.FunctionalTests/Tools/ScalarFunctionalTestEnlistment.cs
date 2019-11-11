@@ -17,7 +17,7 @@ namespace Scalar.FunctionalTests.Tools
 
         private ScalarProcess scalarProcess;
 
-        private ScalarFunctionalTestEnlistment(string pathToScalar, string enlistmentRoot, string repoUrl, string commitish, string localCacheRoot = null, bool fullClone = true)
+        private ScalarFunctionalTestEnlistment(string enlistmentRoot, string repoUrl, string commitish, string localCacheRoot = null, bool fullClone = true)
         {
             this.EnlistmentRoot = enlistmentRoot;
             this.RepoUrl = repoUrl;
@@ -40,7 +40,7 @@ namespace Scalar.FunctionalTests.Tools
             }
 
             this.LocalCacheRoot = localCacheRoot;
-            this.scalarProcess = new ScalarProcess(pathToScalar, this.EnlistmentRoot, this.LocalCacheRoot);
+            this.scalarProcess = new ScalarProcess(this.EnlistmentRoot, this.LocalCacheRoot);
         }
 
         public string EnlistmentRoot
@@ -80,29 +80,28 @@ namespace Scalar.FunctionalTests.Tools
             get; private set;
         }
 
-        public static ScalarFunctionalTestEnlistment CloneWithPerRepoCache(string pathToGvfs, bool skipFetchCommitsAndTrees)
+        public static ScalarFunctionalTestEnlistment CloneWithPerRepoCache(bool skipFetchCommitsAndTrees)
         {
             string enlistmentRoot = ScalarFunctionalTestEnlistment.GetUniqueEnlistmentRoot();
             string localCache = ScalarFunctionalTestEnlistment.GetRepoSpecificLocalCacheRoot(enlistmentRoot);
-            return Clone(pathToGvfs, enlistmentRoot, null, localCacheRoot: localCache, skipFetchCommitsAndTrees: skipFetchCommitsAndTrees);
+            return Clone(enlistmentRoot, null, localCacheRoot: localCache, skipFetchCommitsAndTrees: skipFetchCommitsAndTrees);
         }
 
         public static ScalarFunctionalTestEnlistment Clone(
-            string pathToGvfs,
             string commitish = null,
             string localCacheRoot = null,
             bool skipFetchCommitsAndTrees = false,
             bool fullClone = true)
         {
             string enlistmentRoot = ScalarFunctionalTestEnlistment.GetUniqueEnlistmentRoot();
-            return Clone(pathToGvfs, enlistmentRoot, commitish, localCacheRoot, skipFetchCommitsAndTrees, fullClone);
+            return Clone(enlistmentRoot, commitish, localCacheRoot, skipFetchCommitsAndTrees, fullClone);
         }
 
-        public static ScalarFunctionalTestEnlistment CloneEnlistmentWithSpacesInPath(string pathToGvfs, string commitish = null)
+        public static ScalarFunctionalTestEnlistment CloneEnlistmentWithSpacesInPath(string commitish = null)
         {
             string enlistmentRoot = ScalarFunctionalTestEnlistment.GetUniqueEnlistmentRootWithSpaces();
             string localCache = ScalarFunctionalTestEnlistment.GetRepoSpecificLocalCacheRoot(enlistmentRoot);
-            return Clone(pathToGvfs, enlistmentRoot, commitish, localCache);
+            return Clone(enlistmentRoot, commitish, localCache);
         }
 
         public static string GetUniqueEnlistmentRoot()
@@ -239,7 +238,6 @@ namespace Scalar.FunctionalTests.Tools
         }
 
         private static ScalarFunctionalTestEnlistment Clone(
-            string pathToGvfs,
             string enlistmentRoot,
             string commitish,
             string localCacheRoot,
@@ -247,7 +245,6 @@ namespace Scalar.FunctionalTests.Tools
             bool fullClone = true)
         {
             ScalarFunctionalTestEnlistment enlistment = new ScalarFunctionalTestEnlistment(
-                pathToGvfs,
                 enlistmentRoot ?? GetUniqueEnlistmentRoot(),
                 ScalarTestConfig.RepoToClone,
                 commitish ?? Properties.Settings.Default.Commitish,

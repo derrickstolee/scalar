@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.ServiceProcess;
 using System.Threading;
+using Scalar.FunctionalTests.Properties;
 
 namespace Scalar.FunctionalTests.Tools
 {
@@ -48,7 +49,7 @@ namespace Scalar.FunctionalTests.Tools
             }
 
             // Install service
-            string pathToService = GetPathToService();
+            string pathToService = Settings.Default.GetPathToScalarService();
             Console.WriteLine("Using service executable: " + pathToService);
 
             File.Exists(pathToService).ShouldBeTrue($"{pathToService} does not exist");
@@ -123,29 +124,6 @@ namespace Scalar.FunctionalTests.Tools
             processInfo.Arguments = command + " " + parameters;
 
             return ProcessHelper.Run(processInfo);
-        }
-
-        private static string GetPathToService()
-        {
-            if (ScalarTestConfig.TestScalarOnPath)
-            {
-                ProcessResult result = ProcessHelper.Run("where", Properties.Settings.Default.PathToScalarService);
-                result.ExitCode.ShouldEqual(0, $"{nameof(GetPathToService)}: where returned {result.ExitCode} when looking for {Properties.Settings.Default.PathToScalarService}");
-
-                string firstPath =
-                    string.IsNullOrWhiteSpace(result.Output)
-                    ? null
-                    : result.Output.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
-
-                firstPath.ShouldNotBeNull($"{nameof(GetPathToService)}: Failed to find {Properties.Settings.Default.PathToScalarService}");
-                return firstPath;
-            }
-            else
-            {
-                return Path.Combine(
-                    Properties.Settings.Default.CurrentDirectory,
-                    Properties.Settings.Default.PathToScalarService);
-            }
         }
     }
 }

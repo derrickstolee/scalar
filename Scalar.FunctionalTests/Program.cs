@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using NUnit.Framework;
 
 namespace Scalar.FunctionalTests
 {
@@ -23,10 +24,28 @@ namespace Scalar.FunctionalTests
                 ScalarTestConfig.NoSharedCache = true;
             }
 
-            if (runner.HasCustomArg("--test-scalar-on-path"))
+            if (runner.HasCustomArg("--scalar"))
+            {
+                string pathToScalar = runner.GetCustomArgWithParam("--path-to-scalar");
+                Console.WriteLine("Running tests against Scalar at '{0}'", pathToScalar);
+                Assert.True(File.Exists(pathToScalar), "Scalar executable not found!");
+                ScalarTestConfig.PathToScalar = pathToScalar;
+            }
+            else
             {
                 Console.WriteLine("Running tests against Scalar on path");
-                ScalarTestConfig.TestScalarOnPath = true;
+            }
+
+            if (runner.HasCustomArg("--service"))
+            {
+                string pathToService = runner.GetCustomArgWithParam("--path-to-service");
+                Console.WriteLine("Running tests against Scalar.Service at '{0}'", pathToService);
+                Assert.True(File.Exists(pathToService), "Scalar.Service executable not found!");
+                ScalarTestConfig.PathToScalar = pathToService;
+            }
+            else
+            {
+                Console.WriteLine("Running tests against Scalar.Service on path");
             }
 
             string trace2Output = runner.GetCustomArgWithParam("--trace2-output");

@@ -9,18 +9,9 @@ if [ -z $SCALAR_STAGEDIR ] || [ -z $CONFIGURATION ]; then
   exit 1
 fi
 
-# Set up some paths
-SCRIPTS_SRC=$SCALAR_SCRIPTSDIR
-TESTS_SRC=$SCALAR_OUTPUTDIR/Scalar.FunctionalTests/bin/$CONFIGURATION/netcoreapp3.0/osx-x64/publish
-
-SCRIPTS_DEST=$SCALAR_STAGEDIR/src/Scripts/Mac
-TESTS_DEST=$SCALAR_STAGEDIR/out/Scalar.FunctionalTests/bin/$CONFIGURATION/netcoreapp3.0/osx-x64/publish
-
 # Set up the build drop directory structure
-rm -rf $SCALAR_STAGEDIR
-mkdir -p $SCRIPTS_DEST
-mkdir -p $TESTS_DEST
+rm -rf $SCALAR_STAGEDIR || exit 1
+mkdir -p $SCALAR_STAGEDIR || exit 1
 
-# Copy to the build drop, retaining directory structure
-cp -Rf $SCRIPTS_SRC/ $SCRIPTS_DEST
-cp -Rf $TESTS_SRC/ $TESTS_DEST
+# Publish tests to the build drop
+dotnet publish $SCALAR_SRCDIR/Scalar.FunctionalTests --configuration $CONFIGURATION --runtime osx-x64 --output $SCALAR_STAGEDIR

@@ -17,12 +17,10 @@ namespace Scalar.FunctionalTests.Tests.MultiEnlistmentTests
             string[] repoRootList = new string[] { enlistment1.EnlistmentRoot, enlistment2.EnlistmentRoot };
 
             ScalarProcess scalarProcess1 = new ScalarProcess(
-                ScalarTestConfig.PathToScalar,
                 enlistment1.EnlistmentRoot,
                 enlistment1.LocalCacheRoot);
 
             ScalarProcess scalarProcess2 = new ScalarProcess(
-                ScalarTestConfig.PathToScalar,
                 enlistment2.EnlistmentRoot,
                 enlistment2.LocalCacheRoot);
 
@@ -34,7 +32,6 @@ namespace Scalar.FunctionalTests.Tests.MultiEnlistmentTests
         private void RunServiceCommandAndCheckOutput(string argument, string[] expectedRepoRoots, string[] unexpectedRepoRoots = null)
         {
             ScalarProcess scalarProcess = new ScalarProcess(
-                ScalarTestConfig.PathToScalar,
                 enlistmentRoot: null,
                 localCacheRoot: null);
 

@@ -12,7 +12,7 @@
     <PackageReference Include="GitForMac.GVFS.Installer" />
   </ItemGroup>
 
-  <Target Name="BuildDistribution" AfterTargets="Publish" Condition="'$(OSPlatform)' == 'osx'">
+  <Target Name="BuildDistribution" AfterTargets="AfterBuild" Condition="'$(OSPlatform)' == 'osx'">
     <!-- Download GCM Core -->
     <DownloadFile DestinationFolder="$(DistributionOutputPath)\GCM"
                   SourceUrl="https://github.com/microsoft/Git-Credential-Manager-Core/releases/download/$(GcmCoreReleaseTag)/$(GcmCorePackageFilename)"

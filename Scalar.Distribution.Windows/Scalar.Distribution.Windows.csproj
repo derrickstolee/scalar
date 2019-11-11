@@ -10,7 +10,7 @@
     <PackageReference Include="GitForWindows.GVFS.Installer" />
   </ItemGroup>
 
-  <Target Name="BuildDistribution" AfterTargets="Publish" Condition="'$(OSPlatform)' == 'windows'">
+  <Target Name="BuildDistribution" AfterTargets="AfterBuild" Condition="'$(OSPlatform)' == 'windows'">
     <ItemGroup>
       <ScalarPackage Include="$(RepoOutPath)Scalar.Installer.Windows\installer\$(Configuration)\*.exe" LinkBase="Scalar" />
       <GitPackage    Include="$(PkgGitForWindows_GVFS_Installer)\tools\*.exe"                          LinkBase="Git" />

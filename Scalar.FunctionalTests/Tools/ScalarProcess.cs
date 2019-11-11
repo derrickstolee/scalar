@@ -1,6 +1,7 @@
 using Scalar.Tests.Should;
 using System.Diagnostics;
 using System.IO;
+using Scalar.FunctionalTests.Properties;
 
 namespace Scalar.FunctionalTests.Tools
 {
@@ -15,13 +16,13 @@ namespace Scalar.FunctionalTests.Tools
         private readonly string localCacheRoot;
 
         public ScalarProcess(ScalarFunctionalTestEnlistment enlistment)
-            : this(ScalarTestConfig.PathToScalar, enlistment.EnlistmentRoot, Path.Combine(enlistment.EnlistmentRoot, ScalarTestConfig.DotScalarRoot))
+            : this(enlistment.EnlistmentRoot, Path.Combine(enlistment.EnlistmentRoot, ScalarTestConfig.DotScalarRoot))
         {
         }
 
-        public ScalarProcess(string pathToScalar, string enlistmentRoot, string localCacheRoot)
+        public ScalarProcess(string enlistmentRoot, string localCacheRoot)
         {
-            this.pathToScalar = pathToScalar;
+            this.pathToScalar = Settings.Default.GetPathToScalar();
             this.enlistmentRoot = enlistmentRoot;
             this.localCacheRoot = localCacheRoot;
         }

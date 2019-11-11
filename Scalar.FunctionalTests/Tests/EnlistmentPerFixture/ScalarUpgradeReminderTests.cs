@@ -99,7 +99,7 @@ namespace Scalar.FunctionalTests.Tests.EnlistmentPerFixture
 
         private void ReadNugetConfig(out string feedUrl, out string feedName)
         {
-            ScalarProcess scalar = new ScalarProcess(ScalarTestConfig.PathToScalar, enlistmentRoot: null, localCacheRoot: null);
+            ScalarProcess scalar = new ScalarProcess(enlistmentRoot: null, localCacheRoot: null);
 
             // failOnError is set to false because scalar config read can exit with
             // GenericError when the key-value is not available in config file. That
@@ -110,14 +110,14 @@ namespace Scalar.FunctionalTests.Tests.EnlistmentPerFixture
 
         private void DeleteNugetConfig()
         {
-            ScalarProcess scalar = new ScalarProcess(ScalarTestConfig.PathToScalar, enlistmentRoot: null, localCacheRoot: null);
+            ScalarProcess scalar = new ScalarProcess(enlistmentRoot: null, localCacheRoot: null);
             scalar.DeleteConfig(NugetFeedURLKey);
             scalar.DeleteConfig(NugetFeedPackageNameKey);
         }
 
         private void WriteNugetConfig(string feedUrl, string feedName)
         {
-            ScalarProcess scalar = new ScalarProcess(ScalarTestConfig.PathToScalar, enlistmentRoot: null, localCacheRoot: null);
+            ScalarProcess scalar = new ScalarProcess(enlistmentRoot: null, localCacheRoot: null);
             if (!string.IsNullOrEmpty(feedUrl))
             {
                 scalar.WriteConfig(NugetFeedURLKey, feedUrl);
@@ -198,7 +198,7 @@ namespace Scalar.FunctionalTests.Tests.EnlistmentPerFixture
 
         private string RunScalar(string argument)
         {
-            ProcessResult result = ProcessHelper.Run(ScalarTestConfig.PathToScalar, argument);
+            ProcessResult result = ProcessHelper.Run(Properties.Settings.Default.GetPathToScalar(), argument);
             result.ExitCode.ShouldEqual(0, result.Errors);
 
             return result.Output;

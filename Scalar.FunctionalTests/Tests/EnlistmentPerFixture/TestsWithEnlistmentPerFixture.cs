@@ -28,12 +28,11 @@ namespace Scalar.FunctionalTests.Tests.EnlistmentPerFixture
             if (this.forcePerRepoObjectCache)
             {
                 this.Enlistment = ScalarFunctionalTestEnlistment.CloneWithPerRepoCache(
-                    ScalarTestConfig.PathToScalar,
                     this.skipFetchCommitsAndTreesDuringClone);
             }
             else
             {
-                this.Enlistment = ScalarFunctionalTestEnlistment.Clone(ScalarTestConfig.PathToScalar, fullClone: this.fullClone);
+                this.Enlistment = ScalarFunctionalTestEnlistment.Clone(fullClone: this.fullClone);
             }
         }
 

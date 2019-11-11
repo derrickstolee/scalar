@@ -207,7 +207,6 @@ namespace Scalar.FunctionalTests.Tests.GitCommands
         protected void CreateEnlistment(string commitish = null)
         {
             this.Enlistment = ScalarFunctionalTestEnlistment.Clone(
-                                                                ScalarTestConfig.PathToScalar,
                                                                 commitish: commitish,
                                                                 fullClone: this.validateWorkingTree != Settings.ValidateWorkingTreeMode.SparseMode);
             GitProcess.Invoke(this.Enlistment.RepoRoot, "config advice.statusUoption false");

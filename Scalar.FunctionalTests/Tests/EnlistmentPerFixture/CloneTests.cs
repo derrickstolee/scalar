@@ -25,7 +25,7 @@ namespace Scalar.FunctionalTests.Tests.EnlistmentPerFixture
         {
             string newEnlistmentRoot = ScalarFunctionalTestEnlistment.GetUniqueEnlistmentRoot();
 
-            ProcessStartInfo processInfo = new ProcessStartInfo(ScalarTestConfig.PathToScalar);
+            ProcessStartInfo processInfo = new ProcessStartInfo(Properties.Settings.Default.GetPathToScalar());
             processInfo.Arguments = $"clone {Properties.Settings.Default.RepoToClone} {newEnlistmentRoot} --local-cache-path {Path.Combine(newEnlistmentRoot, "src", ".scalarCache")}";
             processInfo.WindowStyle = ProcessWindowStyle.Hidden;
             processInfo.CreateNoWindow = true;
@@ -45,7 +45,7 @@ namespace Scalar.FunctionalTests.Tests.EnlistmentPerFixture
 
             try
             {
-                enlistment = ScalarFunctionalTestEnlistment.CloneWithPerRepoCache(ScalarTestConfig.PathToScalar, skipFetchCommitsAndTrees: true);
+                enlistment = ScalarFunctionalTestEnlistment.CloneWithPerRepoCache(skipFetchCommitsAndTrees: true);
 
                 ProcessResult result = GitProcess.InvokeProcess(enlistment.RepoRoot, "status");
                 result.ExitCode.ShouldEqual(0, result.Errors);
@@ -66,7 +66,7 @@ namespace Scalar.FunctionalTests.Tests.EnlistmentPerFixture
 
             string newEnlistmentRoot = ScalarFunctionalTestEnlistment.GetUniqueEnlistmentRoot();
 
-            ProcessStartInfo processInfo = new ProcessStartInfo(ScalarTestConfig.PathToScalar);
+            ProcessStartInfo processInfo = new ProcessStartInfo(Properties.Settings.Default.GetPathToScalar());
 
             processInfo.Arguments = $"clone {Properties.Settings.Default.RepoToClone} {newEnlistmentRoot} --no-fetch-commits-and-trees";
             processInfo.WindowStyle = ProcessWindowStyle.Hidden;
@@ -91,14 +91,14 @@ namespace Scalar.FunctionalTests.Tests.EnlistmentPerFixture
         [TestCase]
         public void CloneToPathWithSpaces()
         {
-            ScalarFunctionalTestEnlistment enlistment = ScalarFunctionalTestEnlistment.CloneEnlistmentWithSpacesInPath(ScalarTestConfig.PathToScalar);
+            ScalarFunctionalTestEnlistment enlistment = ScalarFunctionalTestEnlistment.CloneEnlistmentWithSpacesInPath();
             enlistment.DeleteAll();
         }
 
         [TestCase]
         public void CloneCreatesCorrectFilesInRoot()
         {
-            ScalarFunctionalTestEnlistment enlistment = ScalarFunctionalTestEnlistment.Clone(ScalarTestConfig.PathToScalar);
+            ScalarFunctionalTestEnlistment enlistment = ScalarFunctionalTestEnlistment.Clone();
             try
             {
                 Directory.GetFiles(enlistment.EnlistmentRoot).ShouldBeEmpty("There should be no files in the enlistment root after cloning");
@@ -115,7 +115,7 @@ namespace Scalar.FunctionalTests.Tests.EnlistmentPerFixture
 
         private void SubfolderCloneShouldFail()
         {
-            ProcessStartInfo processInfo = new ProcessStartInfo(ScalarTestConfig.PathToScalar);
+            ProcessStartInfo processInfo = new ProcessStartInfo(Properties.Settings.Default.GetPathToScalar());
             processInfo.Arguments = "clone " + ScalarTestConfig.RepoToClone + " src\\scalar\\test1";
             processInfo.WindowStyle = ProcessWindowStyle.Hidden;
             processInfo.CreateNoWindow = true;

@@ -24,12 +24,11 @@ namespace Scalar.FunctionalTests.Tests.EnlistmentPerTestCase
             if (this.forcePerRepoObjectCache)
             {
                 this.Enlistment = ScalarFunctionalTestEnlistment.CloneWithPerRepoCache(
-                    ScalarTestConfig.PathToScalar,
                     skipFetchCommitsAndTrees: false);
             }
             else
             {
-                this.Enlistment = ScalarFunctionalTestEnlistment.Clone(ScalarTestConfig.PathToScalar);
+                this.Enlistment = ScalarFunctionalTestEnlistment.Clone();
             }
         }
 

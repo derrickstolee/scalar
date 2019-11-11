@@ -3,12 +3,6 @@ parameters:
 
 steps:
 
-  - task: UseDotNet@2
-    displayName: Use .NET Core SDK 3.0.100
-    inputs:
-      packageType: sdk
-      version: 3.0.100
-
   - task: DownloadBuildArtifacts@0
     displayName: Download functional tests drop
     inputs:
@@ -26,9 +20,9 @@ steps:
       downloadPath: $(Build.BinariesDirectory)
 
   - bash: |
-      chmod +x $(Build.BinariesDirectory)/FunctionalTests_$(platformFriendlyName)_$(configuration)/src/Scripts/Mac/*.sh
+      chmod +x $(Build.BinariesDirectory)/FunctionalTests_$(platformFriendlyName)_$(configuration)/Scalar.FunctionalTests
       chmod +x $(Build.BinariesDirectory)/Installers_$(platformFriendlyName)_$(configuration)/*.sh
-    displayName: Ensure all scripts are executable
+    displayName: Ensure all scripts and binaries are executable
 
   - ${{ if eq(parameters.useWatchman, 'true') }}:
     - bash: $(Build.BinariesDirectory)/Installers_$(platformFriendlyName)_$(configuration)/InstallScalar.sh
@@ -38,7 +32,7 @@ steps:
     - bash: $(Build.BinariesDirectory)/Installers_$(platformFriendlyName)_$(configuration)/InstallScalar.sh --no-watchman
       displayName: Install product (without watchman)
 
-  - bash: $(Build.BinariesDirectory)/FunctionalTests_$(platformFriendlyName)_$(configuration)/src/Scripts/Mac/RunFunctionalTests.sh $(configuration) --test-scalar-on-path --trace2-output=$(Build.ArtifactStagingDirectory)/logs/trace2-event.log
+  - bash: $(Build.BinariesDirectory)/FunctionalTests_$(platformFriendlyName)_$(configuration)/Scalar.FunctionalTests --full-suite --trace2-output=$(Build.ArtifactStagingDirectory)/logs/trace2-event.log
     displayName: Run functional tests
 
   - ${{ if eq(parameters.useWatchman, 'true') }}:
@@ -62,7 +56,7 @@ steps:
         testRunTitle: macOS $(configuration) Functional Tests (without watchman)
         publishRunAttachments: true
       condition: succeededOrFailed()
-    
+
   - ${{ if eq(parameters.useWatchman, 'true') }}:
     - task: PublishBuildArtifacts@1
       displayName: Publish test and installation logs
@@ -79,11 +73,18 @@ steps:
         artifactName: Logs_$(platformFriendlyName)
       condition: failed()
 
-  - bash: $(Build.BinariesDirectory)/FunctionalTests_$(platformFriendlyName)_$(configuration)/src/Scripts/Mac/CleanupFunctionalTests.sh
-    displayName: Cleanup
+  - bash: sudo rm -rf $HOME/Scalar.FT
+    displayName: Cleanup test repositories
+    condition: always()
+
+  - bash: |
+      pkill -9 -l Scalar.FunctionalTests
+      pkill -9 -l git
+      pkill -9 -l scalar
+      true # always succeed; only a best effort cleanup
+    displayName: Terminate processes
     condition: always()
 
   - bash: sudo rm -rf $(Build.BinariesDirectory)/FunctionalTests_$(platformFriendlyName)_$(configuration)
-    displayName: Cleanup phase 2
+    displayName: Delete functional tests
     condition: always()
-

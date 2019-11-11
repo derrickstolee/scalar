@@ -17,4 +17,4 @@ if [ "$CONFIGURATION" == "Profiling(Release)" ]; then
   CONFIGURATION=Release
 fi
 
-dotnet publish $SCALAR_SRCDIR/Scalar.sln --runtime osx-x64 --configuration $CONFIGURATION || exit 1
+dotnet build $SCALAR_SRCDIR/Scalar.sln -p:ScalarVersion=$VERSION --configuration $CONFIGURATION || exit 1

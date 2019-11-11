@@ -6,38 +6,35 @@ IF "%1"=="" (SET "Configuration=Debug") ELSE (SET "Configuration=%1")
 SETLOCAL
 SET PATH=C:\Program Files\Scalar;C:\Program Files\Git\cmd;%PATH%
 
-SET publishFragment=bin\%Configuration%\netcoreapp3.0\win-x64\publish
-SET functionalTestsDir=%SCALAR_OUTPUTDIR%\Scalar.FunctionalTests\%publishFragment%
-
-IF "%2"=="--test-scalar-on-path" GOTO :testPath
-
-:testBuilt
-ECHO *******************************
-ECHO Testing built version of Scalar
-ECHO *******************************
-REM Copy most recently build Scalar binaries
-SET copyOptions=/s /njh /njs /nfl /ndl
-robocopy %SCALAR_OUTPUTDIR%\Scalar\%publishFragment% %functionalTestsDir% %copyOptions%
-robocopy %SCALAR_OUTPUTDIR%\Scalar.Service\%publishFragment% %functionalTestsDir% %copyOptions%
-robocopy %SCALAR_OUTPUTDIR%\Scalar.Service.UI\%publishFragment% %functionalTestsDir% %copyOptions%
-robocopy %SCALAR_OUTPUTDIR%\Scalar.Upgrader\%publishFragment% %functionalTestsDir% %copyOptions%
-GOTO :startTests
+IF "%2"=="--local" GOTO :testLocal
 
 :testPath
 ECHO **************************
 ECHO Testing Scalar on the PATH
 ECHO **************************
-ECHO PATH:
+ECHO %%PATH%%:
 ECHO %PATH%
-ECHO Scalar location:
+ECHO Scalar:
 where scalar
-ECHO Scalar.Service location:
+ECHO Scalar.Service:
 where scalar.service
-ECHO Git location:
+ECHO Git:
 where git
 
-:startTests
-%functionalTestsDir%\Scalar.FunctionalTests /result:TestResultNetCore.xml %2 %3 %4 %5 %6 %7 %8 || goto :endTests
+dotnet run %SCALAR_SRCDIR%\Scalar.FunctionalTests --configuration $Configuration -- %2 %3 %4 %5 %6 %7 %8
+GOTO :endTests
+
+:testLocal
+SET SCALAR_EXEC_PATH=%SCALAR_OUTPUTDIR%\Scalar\bin\%Configuration%\netcoreapp3.0\win-x64\publish\scalar.exe
+SET SERVICE_EXEC_PATH=%SCALAR_OUTPUTDIR%\Scalar.Service\bin\%Configuration%\netcoreapp3.0\win-x64\publish\scalar.service.exe
+ECHO ********************************
+ECHO Testing Scalar from build output
+ECHO ********************************
+ECHO Scalar: %SCALAR_EXEC_PATH%
+ECHO Scalar.Service: %SERVICE_EXEC_PATH%
+
+dotnet run %SCALAR_SRCDIR%\Scalar.FunctionalTests --configuration $Configuration -- --scalar=%SCALAR_EXEC_PATH% --service=%SERVICE_EXEC_PATH% %3 %4 %5 %6 %7 %8
+GOTO :endTests
 
 :endTests
 SET error=%errorlevel%

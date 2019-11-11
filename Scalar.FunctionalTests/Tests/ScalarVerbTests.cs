@@ -33,7 +33,7 @@ namespace Scalar.FunctionalTests.Tests
 
         private void CallScalar(string args, ExpectedReturnCode expectedErrorCode)
         {
-            ProcessStartInfo processInfo = new ProcessStartInfo(ScalarTestConfig.PathToScalar);
+            ProcessStartInfo processInfo = new ProcessStartInfo(Properties.Settings.Default.GetPathToScalar());
             processInfo.Arguments = args;
             processInfo.WindowStyle = ProcessWindowStyle.Hidden;
             processInfo.UseShellExecute = false;

@@ -1,15 +1,5 @@
 steps:
 
-  - task: NuGetToolInstaller@0
-    inputs:
-      versionSpec: '>=5.1'
-
-  - task: UseDotNet@2
-    displayName: Use .NET Core SDK 3.0.100
-    inputs:
-      packageType: sdk
-      version: 3.0.100
-
   - task: DownloadBuildArtifacts@0
     displayName: Download functional tests drop
     inputs:
@@ -26,13 +16,15 @@ steps:
       artifactName: Installers_$(platformFriendlyName)_$(configuration)
       downloadPath: $(Build.BinariesDirectory)
 
-  - script: $(Build.BinariesDirectory)/Installers_$(platformFriendlyName)_$(configuration)/InstallScalar.bat $(Build.ArtifactStagingDirectory)\logs
+  - script: $(Build.BinariesDirectory)/Installers_$(platformFriendlyName)_$(configuration)\InstallScalar.bat $(Build.ArtifactStagingDirectory)\logs
     displayName: Install product
 
   - script: git config --global credential.interactive never
     displayName: Disable interactive auth
 
-  - script: $(Build.BinariesDirectory)/FunctionalTests_$(platformFriendlyName)_$(configuration)/src/Scripts/RunFunctionalTests.bat $(configuration) --test-scalar-on-path "--trace2-output=$(Build.ArtifactStagingDirectory)\logs\trace2-event.log"
+  - script: |
+      SET PATH=C:\Program Files\Scalar;C:\Program Files\Git\cmd;%PATH%
+      $(Build.BinariesDirectory)/FunctionalTests_$(platformFriendlyName)_$(configuration)/Scalar.FunctionalTests "--trace2-output=$(Build.ArtifactStagingDirectory)\logs\trace2-event.log"
     displayName: Run functional tests
 
   - task: PublishTestResults@2
