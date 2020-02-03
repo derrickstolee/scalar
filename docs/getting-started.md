@@ -93,11 +93,6 @@ The options below are not intended for use by a typical user. These are
 usually used by build machines to create a temporary enlistment that
 operates on a single commit.
 
-* `--single-branch`: Use this option to only download metadata for the branch
-  that will be checked out. This is helpful for build machines that target
-  a remote with many branches. Any `git fetch` commands after the clone will
-  still ask for all branches.
-
 * `--no-prefetch`: Use this option to not prefetch commits after clone. This
   is not recommended for anyone planning to use their clone for history
   traversal. Use of this option will make commands like `git log` or

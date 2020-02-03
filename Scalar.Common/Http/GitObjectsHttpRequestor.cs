@@ -21,7 +21,7 @@ namespace Scalar.Common.Http
 
         public CacheServerInfo CacheServer { get; private set; }
 
-        public virtual GitRefs QueryInfoRefs(string branch)
+        public virtual GitRefs QueryInfoRefs()
         {
             long requestId = HttpRequestor.GetNewRequestId();
 
@@ -50,7 +50,7 @@ namespace Scalar.Common.Http
                         }
 
                         List<string> infoRefsResponse = response.RetryableReadAllLines();
-                        return new RetryWrapper<GitRefs>.CallbackResult(new GitRefs(infoRefsResponse, branch));
+                        return new RetryWrapper<GitRefs>.CallbackResult(new GitRefs(infoRefsResponse));
                     }
                 });
 

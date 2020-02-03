@@ -16,7 +16,7 @@ namespace Scalar.Common.Git
 
         private string remoteHeadCommitId = null;
 
-        public GitRefs(IEnumerable<string> infoRefsResponse, string branch)
+        public GitRefs(IEnumerable<string> infoRefsResponse)
         {
             // First 4 characters of a given line are the length of the line and not part of the commit id so
             //  skip them (https://git-scm.com/book/en/v2/Git-Internals-Transfer-Protocols)
@@ -25,9 +25,6 @@ namespace Scalar.Common.Git
                 .Where(line =>
                     line.Contains(" " + HeadRefPrefix) ||
                     (line.Contains(" " + TagsRefPrefix) && !line.Contains("^")))
-                .Where(line =>
-                    branch == null ||
-                    line.EndsWith(HeadRefPrefix + branch))
                 .Select(line => line.Split(' '))
                 .ToDictionary(
                     line => line[1].Replace(HeadRefPrefix, OriginRemoteRefPrefix),

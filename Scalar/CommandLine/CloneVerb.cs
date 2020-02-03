@@ -59,13 +59,6 @@ namespace Scalar.CommandLine
         public string Branch { get; set; }
 
         [Option(
-            "single-branch",
-            Required = false,
-            Default = false,
-            HelpText = "Use this option to only download metadata for the branch that will be checked out")]
-        public bool SingleBranch { get; set; }
-
-        [Option(
             "no-fetch-commits-and-trees",
             Required = false,
             Default = false,
@@ -182,7 +175,6 @@ namespace Scalar.CommandLine
                 {
                     { nameof(this.Branch), this.Branch },
                     { nameof(this.LocalCacheRoot), this.LocalCacheRoot },
-                    { nameof(this.SingleBranch), this.SingleBranch },
                     { nameof(this.FullClone), this.FullClone },
                     { nameof(this.NoFetchCommitsAndTrees), this.NoFetchCommitsAndTrees },
                     { nameof(this.Unattended), this.Unattended },
@@ -334,7 +326,7 @@ namespace Scalar.CommandLine
 
         private Result CreateScalarDirctories(string resolvedLocalCacheRoot)
         {
-            this.refs = this.objectRequestor.QueryInfoRefs(this.SingleBranch ? this.Branch : null);
+            this.refs = this.objectRequestor.QueryInfoRefs();
 
             if (this.refs == null)
             {
