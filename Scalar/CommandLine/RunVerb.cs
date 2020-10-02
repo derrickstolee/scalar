@@ -105,6 +105,13 @@ namespace Scalar.CommandLine
                         GitObjectsHttpRequestor objectRequestor = null;
                         CacheServerInfo cacheServer;
                         GitObjects gitObjects;
+                        GitFeatureFlags flags = this.GetAvailableGitFeatures(tracer);
+
+                        if (!flags.HasFlag(GitFeatureFlags.MaintenanceBuiltin) && this.MaintenanceTask != ScalarConstants.VerbParameters.Maintenance.ConfigTaskName)
+                        {
+                            tracer.RelatedError("Your Git version does not include the 'maintenance' builtin. Only the 'config' step is allowed in this configuration.");
+                            return;
+                        }
 
                         switch (this.MaintenanceTask)
                         {
